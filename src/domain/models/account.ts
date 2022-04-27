@@ -4,5 +4,5 @@ export type AccountModel = {
   password?: string;
   email: string;
   createdAt?: Date;
-  businessIds?: string[]
+  plan: 'FREE' | 'PREMIUM' | 'VIP';
 };

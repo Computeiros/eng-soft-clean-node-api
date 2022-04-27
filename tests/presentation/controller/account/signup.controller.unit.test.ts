@@ -1,95 +1,53 @@
-import { AddAccount } from '@/domain/usecases/account/add-account';
+import { AddAccount } from '@/domain/services/account/add-account';
 import { MissingParamsError } from '@/presentation/errors/missing-params.error';
-import { badRequest, internalServerError, success } from '@/presentation/helpers/http.helpers';
-import { mockAddAccount } from '@/tests/presentation/mocks/account.mock';
+import { badRequest, success } from '@/presentation/helpers/http.helpers';
 import { SignUpController } from '@/presentation/controller/account';
 
-type SutTypes = {
-  sut: SignUpController,
-  addAccountStub: AddAccount,
-};
-
-const makeSut = (): SutTypes => {
-  const addAccountStub = mockAddAccount();
-  const sut = new SignUpController(addAccountStub);
-  return {
-    sut,
-    addAccountStub,
-  };
-};
-
+const request = {
+  email: 'any_email',
+  name: 'any_name',
+  password: 'any_password',
+  plan: 'Free',
+} as AddAccount.Params;
 describe('SignUpController', () => {
-  it('should call AddAccount with correct values', async () => {
-    const { sut, addAccountStub } = makeSut();
-    const addSpy = jest.spyOn(addAccountStub, 'add');
-    const request = {
-      name: 'any_name',
-      email: 'any_email',
-      password: 'any_password',
+  let sut: SignUpController;
+  let addAccount: AddAccount;
+
+  beforeAll(() => {
+    addAccount = {
+      add: jest.fn(async () => Promise.resolve({ id: 'any_id' })),
     };
+  });
+
+  beforeEach(() => {
+    sut = new SignUpController(addAccount);
+  });
+  it('should call AddAccount with correct values', async () => {
     await sut.handle(request);
-    expect(addSpy).toHaveBeenCalledWith({
+    expect(addAccount.add).toHaveBeenCalledWith({
       name: 'any_name',
       email: 'any_email',
       password: 'any_password',
+      plan: 'Free',
     });
   });
 
   it('should return bad request if required params are not provided', async () => {
-    const { sut } = makeSut();
-    const request = {
+    const fakeErrorRequest = {
       email: 'any_email',
       name: undefined,
       password: 'any_password',
+      plan: undefined,
     };
 
-    const httpResponse = await sut.handle(request);
+    const httpResponse = await sut.handle(fakeErrorRequest);
     expect(httpResponse).toEqual(badRequest(new MissingParamsError()));
   });
 
   it('should return response status success if receive correct params', async () => {
-    const { sut } = makeSut();
-    const request = {
-      email: 'any_email',
-      name: 'any_name',
-      password: 'any_password',
-    };
-
     const httpResponse = await sut.handle(request);
     expect(httpResponse).toEqual(success({
       id: 'any_id',
-      name: 'any_name',
-      email: 'any_email',
-      password: 'any_password',
     }));
-  });
-
-  it('should return response status success if receive correct params and no password', async () => {
-    const { sut } = makeSut();
-    const request = {
-      email: 'any_email',
-      name: 'any_name',
-    };
-
-    const httpResponse = await sut.handle(request);
-    expect(httpResponse).toEqual(success({
-      id: 'any_id',
-      name: 'any_name',
-      email: 'any_email',
-      password: expect.anything(),
-    }));
-  });
-
-  it('should return internal server error if addAccount throw an error', async () => {
-    const { sut, addAccountStub } = makeSut();
-    jest.spyOn(addAccountStub, 'add').mockImplementationOnce(async () => Promise.reject(new Error()));
-    const request = {
-      name: 'any_name',
-      email: 'any_email',
-      password: 'any_password',
-    };
-
-    const httpResponse = await sut.handle(request);
-    expect(httpResponse).toEqual(internalServerError(new Error()));
   });
 });

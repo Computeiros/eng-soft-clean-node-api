@@ -16,17 +16,17 @@ services:
   api:
     container_name: api-container
     image: node:16
-    working_dir: /usr/src/small-business-digital-development-api
+    working_dir: /usr/src/eng-soft-clean-node-api
     restart: always
     command: bash -c "yarn && yarn migrations:run && yarn local" 
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/sbdd?schema=public
     volumes:
-      - ./src/:/usr/src/small-business-digital-development-api/src/ 
-      - ./tsconfig.json:/usr/src/small-business-digital-development-api/tsconfig.json 
-      - ./tsconfig.build.json:/usr/src/small-business-digital-development-api/tsconfig.build.json 
-      - ./package.json:/usr/src/small-business-digital-development-api/package.json
-      - ./prisma:/usr/src/small-business-digital-development-api/prisma/
+      - ./src/:/usr/src/eng-soft-clean-node-api/src/ 
+      - ./tsconfig.json:/usr/src/eng-soft-clean-node-api/tsconfig.json 
+      - ./tsconfig.build.json:/usr/src/eng-soft-clean-node-api/tsconfig.build.json 
+      - ./package.json:/usr/src/eng-soft-clean-node-api/package.json
+      - ./prisma:/usr/src/eng-soft-clean-node-api/prisma/
     ports: 
       - "3333:3333"
       - "9222:9222"
