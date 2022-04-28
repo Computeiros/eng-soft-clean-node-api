@@ -1,7 +1,7 @@
-import { AddAccountRepository } from '@/data/contracts';
+import { AddAccountRepository, GetAccountRepository } from '@/data/contracts';
 import { prisma } from '@/infra/db/helpers';
 
-export class AccountPrismaRepository implements AddAccountRepository {
+export class AccountPrismaRepository implements AddAccountRepository, GetAccountRepository {
   async add(data: AddAccountRepository.Params): Promise<AddAccountRepository.Result> {
     const result = await prisma.account.create({
       data: {
@@ -13,6 +13,17 @@ export class AccountPrismaRepository implements AddAccountRepository {
     });
     return {
       id: result.id,
+    };
+  }
+
+  async get(data: GetAccountRepository.Params): Promise<GetAccountRepository.Result> {
+    const { id } = data;
+    const result = await prisma.account.findFirst({ where: { id } });
+    return {
+      id,
+      name: result.name,
+      email: result.email,
+      plan: result.plan,
     };
   }
 }
