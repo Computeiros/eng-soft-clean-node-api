@@ -1,0 +1,84 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "EngSoft API Documentation",
+    "description": "API documentation",
+    "version": "1.0.0",
+    "contact": {
+      "email": "lucas.flaquer@gmail.com"
+    }
+  },
+  "paths": {
+    "/signup": {
+      "post": {
+        "tags": ["User", "Signup"],
+        "summary": "Signup",
+        "description": "Signup",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "plan": {
+                    "type": "string",
+                    "enum": ["Free", "Premium", "VIP"]
+                  }
+                },
+                "example": {
+                  "name": "user 1",
+                  "email": "user@example.com",
+                  "password": "123456",
+                  "plan": "Free"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "500": {
+            "description": "Category already exists"
+          }
+        }
+      }
+    },
+    "/info/{id}": {
+      "get": {
+        "tags": ["User", "Info"],
+        "summary": "Info",
+        "description": "Info",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    }
+  }
+}
