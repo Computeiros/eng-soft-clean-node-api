@@ -9,9 +9,9 @@
     }
   },
   "paths": {
-    "/signup": {
+    "/api/signup": {
       "post": {
-        "tags": ["User", "Signup"],
+        "tags": ["Account"],
         "summary": "Signup",
         "description": "Signup",
         "requestBody": {
@@ -49,21 +49,21 @@
             "description": "Created"
           },
           "500": {
-            "description": "Category already exists"
+            "description": "Internal server error"
           }
         }
       }
     },
-    "/info/{id}": {
+    "/api/info/{id}": {
       "get": {
-        "tags": ["User", "Info"],
+        "tags": ["Account"],
         "summary": "Info",
         "description": "Info",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "User ID",
+            "description": "Account ID",
             "required": true,
             "schema": {
               "type": "string"
@@ -76,6 +76,9 @@
           },
           "404": {
             "description": "User not found"
+          },
+          "500": {
+            "description": "Internal server error"
           }
         }
       }

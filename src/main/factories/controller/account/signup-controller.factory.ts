@@ -10,8 +10,11 @@ export const makeSignUpController = (): BaseController => {
 
   const addAccountRepository = new AccountPrismaRepository();
 
+  const hasher = new BcryptAdapter(salt);
+
   const addAccount = new AddAccountService(
     addAccountRepository,
+    hasher,
   );
 
   return new SignUpController(addAccount);
