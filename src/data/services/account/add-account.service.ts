@@ -1,9 +1,10 @@
-import { AddAccountRepository } from '@/data/contracts';
+import { AddAccountRepository, Hasher } from '@/data/contracts';
 import { AddAccount } from '@/domain/services/account';
 
 export class AddAccountService implements AddAccount {
   constructor(
     private readonly addAccountRepository: AddAccountRepository,
+    private readonly hasher: Hasher,
   ) {}
 
   async add(data: AddAccount.Params): Promise<AddAccount.Result> {
@@ -11,10 +12,12 @@ export class AddAccountService implements AddAccount {
       email, password, plan, name,
     } = data;
 
+    const hashedPassword = await this.hasher.hash(password);
+
     const response = await this.addAccountRepository.add({
       name,
       email,
-      password,
+      password: hashedPassword,
       plan,
     });
 
