@@ -48,5 +48,5 @@ jobs:
         run: yarn prisma migrate deploy
 
       - name: Run tests
-        run: yarn test && yarn test:integration
+        run: yarn test:all
 

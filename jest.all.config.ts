@@ -54,5 +54,4 @@ export default {
       "statements": 100
     }
   },
-  testRegex: "\\.integration\\.test\\.ts$"
 };

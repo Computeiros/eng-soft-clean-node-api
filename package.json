@@ -29,6 +29,7 @@
   "scripts": {
     "test": "jest -i -silent --no-cache",
     "test:integration": "jest -i -silent --no-cache -c jest.integration.config.ts",
+    "test:all": "jest -i -silent --no-cache -c jest.all.config.ts",
     "lint": "eslint src",
     "local": "ts-node-dev -r tsconfig-paths/register --exit-child --inspect --transpile-only --ignore-watch node_modules --respawn src/main/server.ts",
     "dev:up": "docker-compose up",
