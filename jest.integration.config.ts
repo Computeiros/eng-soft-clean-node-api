@@ -1,8 +1,11 @@
+// must be running your docker compose
+if (!process.env.DATABASE_URL) {
+  process.env.DATABASE_URL = "postgresql://postgres:postgres@localhost:5432/sbdd?schema=public";
+}
+
 export default {
   clearMocks: true,
-  collectCoverage: true,
-  coverageDirectory: "coverage",
-  coverageProvider: "v8",
+  collectCoverage: false,
   transform: {
     "^.+\\.(t|j)sx?$": [
       "@swc/jest",
@@ -27,15 +30,6 @@ export default {
       },
     ],
   },
-  collectCoverageFrom: [
-    '<rootDir>/src/**/*.ts',
-    '!<rootDir>/src/**/*.protocols.ts',
-    '!<rootDir>/src/**/index.ts',
-    '!<rootDir>/src/main/**',
-    '!**/test/**',
-    '!**/protocols/**',
-    '!**/domain/**',
-  ],
   roots: ['<rootDir>/tests'],
   moduleNameMapper: {
     '@/tests/(.*)': '<rootDir>/tests/$1',
@@ -50,5 +44,5 @@ export default {
       "statements": 100
     }
   },
-  testRegex: "\\.unit\\.test\\.ts$"
+  testRegex: "\\.integration\\.test\\.ts$"
 };
