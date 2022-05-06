@@ -12,16 +12,12 @@ on:
 
 env: 
   DATABASE_URL: ${{ secrets.DEV_DATABASE_URL }}
-  EMAIL_ACCOUNT: ${{ secrets.EMAIL_ACCOUNT }}
-  EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
 
 jobs: 
   QualityGate:
     runs-on: ubuntu-latest
     env:
       DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/sbdd?schema=public"
-      EMAIL_ACCOUNT: ${{ secrets.EMAIL_ACCOUNT }}
-      EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}  
 
     steps:
       - name: Checkout
