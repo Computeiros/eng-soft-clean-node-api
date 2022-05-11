@@ -1,5 +1,6 @@
 if (!process.env.DATABASE_URL) {
-  process.env.DATABASE_URL = "postgresql://postgres:postgres@localhost:5432/sbdd?schema=public"
+  process.env.DATABASE_URL =
+    "postgresql://postgres:postgres@localhost:5432/sbdd?schema=public";
 }
 
 export default {
@@ -11,47 +12,47 @@ export default {
     "^.+\\.(t|j)sx?$": [
       "@swc/jest",
       {
-        jsc:{
-          parser:{
-            syntax:'typescript',
+        jsc: {
+          parser: {
+            syntax: "typescript",
             tsx: false,
             decorators: true,
           },
-          target: 'es2017',
+          target: "es2017",
           keepClassNames: true,
           transform: {
-            legacyDecorator:true,
+            legacyDecorator: true,
             decoratorMetadata: true,
           },
         },
         module: {
-          type: 'es6',
+          type: "es6",
           noInterop: false,
         },
       },
     ],
   },
   collectCoverageFrom: [
-    '<rootDir>/src/**/*.ts',
-    '!<rootDir>/src/**/*.protocols.ts',
-    '!<rootDir>/src/**/index.ts',
-    '!<rootDir>/src/main/**',
-    '!**/test/**',
-    '!**/protocols/**',
-    '!**/domain/**',
+    "<rootDir>/src/**/*.ts",
+    "!<rootDir>/src/**/*.protocols.ts",
+    "!<rootDir>/src/**/index.ts",
+    "!<rootDir>/src/main/**",
+    "!**/test/**",
+    "!**/protocols/**",
+    "!**/domain/**",
   ],
-  roots: ['<rootDir>/tests'],
+  roots: ["<rootDir>/tests"],
   moduleNameMapper: {
-    '@/tests/(.*)': '<rootDir>/tests/$1',
-    '@/(.*)': '<rootDir>/src/$1',
+    "@/tests/(.*)": "<rootDir>/tests/$1",
+    "@/(.*)": "<rootDir>/src/$1",
   },
-  testEnvironment: 'jest-environment-node',
+  testEnvironment: "jest-environment-node",
   coverageThreshold: {
-    "global": {
-      "branches": 100,
-      "functions": 100,
-      "lines": 100,
-      "statements": 100
-    }
+    global: {
+      branches: 100,
+      functions: 100,
+      lines: 100,
+      statements: 100,
+    },
   },
 };

@@ -3,14 +3,14 @@ services:
   db:
     image: "bitnami/postgresql"
     restart: always
-    expose:
-      - "5432"
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DATABASE=sbdd
+      - POSTGRESQL_USER=postgres
+      - POSTGRESQL_PASSWORD=postgres
+      - POSTGRESQL_DATABASE=sbdd
     ports:
       - "5432:5432"
+    volumes:
+      - "postgresql_data:/bitnami/postgresql"
     networks:
       - app-net
   ci:
@@ -27,7 +27,13 @@ services:
       - db
     networks:
       - app-net
+    volumes:
+      - "../coverage:/app/coverage"
 
 networks:
   app-net:
     driver: bridge
+
+volumes:
+  postgresql_data:
+    driver: local
