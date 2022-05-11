@@ -13,7 +13,7 @@ services:
       - "5432:5432"
     networks:
       - app-net
-  api:
+  ci:
     container_name: api-container-test
     build:
       context: ../

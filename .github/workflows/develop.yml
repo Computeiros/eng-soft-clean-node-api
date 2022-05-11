@@ -17,6 +17,7 @@ jobs:
   QualityGate:
     runs-on: ubuntu-latest
     env:
+      COMPOSE_FILE: .ci/docker-compose.yml
       DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/sbdd?schema=public"
 
     steps:
@@ -28,8 +29,11 @@ jobs:
         with:
           node-version: 16
 
+      - name: Build Docker
+        run: docker-compose build
+
       - name: Run tests
-        run: docker-compose -f .ci/docker-compose.yml up
+        run: docker-compose run ci
 
       - name: Upload code coverage to codecov
         uses: codecov/codecov-action@v2
