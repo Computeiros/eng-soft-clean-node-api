@@ -8,12 +8,12 @@ on:
     types: [synchronize, opened, reopened, ready_for_review, labeled]
   push:
     branches:
-      - develop  
+      - develop
 
-env: 
+env:
   DATABASE_URL: ${{ secrets.DEV_DATABASE_URL }}
 
-jobs: 
+jobs:
   QualityGate:
     runs-on: ubuntu-latest
     env:
@@ -28,23 +28,8 @@ jobs:
         with:
           node-version: 16
 
-      - name: Yarn Install
-        run: yarn
-
-      - name: Yarn Audit
-        run: yarn audit
-
-      - name: Lint code
-        run: yarn lint
-       
-      - name: Run instance of DB
-        run: docker-compose up -d db
-        
-      - name: Run migrations
-        run: yarn prisma migrate deploy
-
       - name: Run tests
-        run: yarn test:all
+        run: docker-compose -f .ci/docker-compose.yml up
 
       - name: Upload code coverage to codecov
         uses: codecov/codecov-action@v2
@@ -53,4 +38,3 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true # optional (default = false)
           verbose: true # optional (default = false)
-
