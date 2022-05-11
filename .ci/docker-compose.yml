@@ -1,0 +1,39 @@
+version: "3.8"
+services:
+  db:
+    image: "bitnami/postgresql"
+    restart: always
+    environment:
+      - POSTGRESQL_USER=postgres
+      - POSTGRESQL_PASSWORD=postgres
+      - POSTGRESQL_DATABASE=sbdd
+    ports:
+      - "5432:5432"
+    volumes:
+      - "postgresql_data:/bitnami/postgresql"
+    networks:
+      - app-net
+  ci:
+    container_name: api-container-test
+    build:
+      context: ../
+      dockerfile: .ci/Dockerfile
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/sbdd?schema=public
+    ports:
+      - "3333:3333"
+      - "9222:9222"
+    depends_on:
+      - db
+    networks:
+      - app-net
+    volumes:
+      - "../coverage:/app/coverage"
+
+networks:
+  app-net:
+    driver: bridge
+
+volumes:
+  postgresql_data:
+    driver: local

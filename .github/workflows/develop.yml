@@ -8,15 +8,16 @@ on:
     types: [synchronize, opened, reopened, ready_for_review, labeled]
   push:
     branches:
-      - develop  
+      - develop
 
-env: 
+env:
   DATABASE_URL: ${{ secrets.DEV_DATABASE_URL }}
 
-jobs: 
+jobs:
   QualityGate:
     runs-on: ubuntu-latest
     env:
+      COMPOSE_FILE: .ci/docker-compose.yml
       DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/sbdd?schema=public"
 
     steps:
@@ -28,21 +29,16 @@ jobs:
         with:
           node-version: 16
 
-      - name: Yarn Install
-        run: yarn
-
-      - name: Yarn Audit
-        run: yarn audit
-
-      - name: Lint code
-        run: yarn lint
-       
-      - name: Run instance of DB
-        run: docker-compose up -d db
-        
-      - name: Run migrations
-        run: yarn prisma migrate deploy
+      - name: Build Docker
+        run: docker-compose build
 
       - name: Run tests
-        run: yarn test:all
+        run: docker-compose run ci
 
+      - name: Upload code coverage to codecov
+        uses: codecov/codecov-action@v2
+        with:
+          directory: ./coverage
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true # optional (default = false)
+          verbose: true # optional (default = false)
