@@ -1,5 +1,5 @@
-import bcrypt from "bcryptjs";
-import { Hasher, HashComparer } from "@/data/contracts/cryptography";
+import bcrypt from 'bcryptjs';
+import { Hasher, HashComparer } from '@/data/contracts/cryptography';
 
 export class BcryptAdapter implements Hasher, HashComparer {
   constructor(private readonly salt: number) {}
