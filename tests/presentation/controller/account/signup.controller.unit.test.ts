@@ -1,6 +1,7 @@
+import { Prisma } from '@prisma/client';
 import { AddAccount } from '@/domain/services/account/add-account';
 import { MissingParamsError } from '@/presentation/errors/missing-params.error';
-import { badRequest, success } from '@/presentation/helpers/http.helpers';
+import { badRequest, internalServerError, success } from '@/presentation/helpers/http.helpers';
 import { SignUpController } from '@/presentation/controller/account';
 
 const request = {
@@ -49,5 +50,13 @@ describe('SignUpController', () => {
     expect(httpResponse).toEqual(success({
       id: 'any_id',
     }));
+  });
+
+  it('should return internal server error if AddAccount throws prisma error P2002', async () => {
+    addAccount.add = jest.fn(async () => Promise.reject(new Prisma.PrismaClientKnownRequestError('There is a unique constraint violation, email already exists', 'P2002', '')));
+    const httpResponse = await sut.handle(request);
+    expect(httpResponse).toEqual(internalServerError(
+      new Error('There is a unique constraint violation, email already exists'),
+    ));
   });
 });
