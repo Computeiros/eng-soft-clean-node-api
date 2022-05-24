@@ -13,5 +13,5 @@ export const success = <T>(data: T): HttpResponse => ({
 
 export const internalServerError = (error: Error): HttpResponse => ({
   statusCode: 500,
-  body: new InternalServerError(error.stack),
+  body: new InternalServerError(error.stack, error.message),
 });
