@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { AddAccount } from '@/domain/services/account/add-account';
 import { MissingParamsError } from '@/presentation/errors/missing-params.error';
 import { badRequest, internalServerError, success } from '@/presentation/helpers/http.helpers';
@@ -29,7 +29,7 @@ export class SignUpController implements BaseController<SignUpController.Request
         return badRequest(error);
       }
 
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error instanceof PrismaClientKnownRequestError) {
         if (error.code === 'P2002') {
           return internalServerError(new Error('There is a unique constraint violation, email already exists'));
         }
