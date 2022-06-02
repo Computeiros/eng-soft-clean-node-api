@@ -1,26 +1,21 @@
-name: Development workflow
+name: Homolog workflow
 
 on:
   pull_request:
     branches:
-      - develop
       - homolog
       - main
     types: [synchronize, opened, reopened, ready_for_review, labeled]
   push:
     branches:
-      - develop
+      - homolog
 
 env:
-  DATABASE_URL: ${{ secrets.DEV_DATABASE_URL }}
+  DATABASE_URL: ${{ secrets.HOMOLOG_DATABASE_URL }}
 
 jobs:
-  QualityGate:
+  Deploy:
     runs-on: ubuntu-latest
-    env:
-      COMPOSE_FILE: .ci/docker-compose.yml
-      DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/sbdd?schema=public"
-
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -30,37 +25,23 @@ jobs:
         with:
           node-version: 16
 
-      - name: Build Docker
-        run: docker-compose build
-
-      - name: Run tests
-        run: docker-compose run ci
-
-      - name: Upload code coverage to codecov
-        uses: codecov/codecov-action@v2
-        with:
-          directory: ./coverage
-          token: ${{ secrets.CODECOV_TOKEN }}
-          fail_ci_if_error: true # optional (default = false)
-          verbose: true # optional (default = false)
-
       - name: Yarn Install
         run: yarn
 
       - name: Run migrations
         run: yarn prisma migrate deploy
         env:
-          DATABASE_URL: ${{ secrets.DEV_DATABASE_URL }}
+          DATABASE_URL: ${{ secrets.HOMOLOG_DATABASE_URL }}
 
       - name: Build, Push and Release a Docker container to Heroku.
         uses: gonuit/heroku-docker-deploy@v1.3.3
         with:
           email: ${{ secrets.HEROKU_EMAIL }}
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: ${{ secrets.HEROKU_DEV_APP_NAME }}
+          heroku_app_name: ${{ secrets.HEROKU_HOMOLOG_APP_NAME }}
           dockerfile_directory: ./
           dockerfile_name: Dockerfile
           docker_options: "--no-cache"
           process_type: web
         env:
-          DATABASE_URL: ${{ secrets.DEV_DATABASE_URL }}
+          DATABASE_URL: ${{ secrets.HOMOLOG_DATABASE_URL }}
