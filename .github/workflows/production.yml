@@ -5,10 +5,10 @@ on:
     branches:
       - main
 
-env: 
+env:
   DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
 
-jobs: 
+jobs:
   Deploy:
     runs-on: ubuntu-latest
     steps:
@@ -26,7 +26,7 @@ jobs:
       - name: Run migrations
         run: yarn prisma migrate deploy
 
-      - name: Build, Push and Release a Docker container to Heroku. 
+      - name: Build, Push and Release a Docker container to Heroku.
         uses: gonuit/heroku-docker-deploy@v1.3.3
         with:
           email: ${{ secrets.HEROKU_EMAIL }}
@@ -36,5 +36,5 @@ jobs:
           dockerfile_name: Dockerfile
           docker_options: "--no-cache"
           process_type: web
-        env: 
+        env:
           DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
